@@ -111,6 +111,7 @@ namespace HouseWithoutCars
                 _mapView.MouseRightButtonUp += OnMapViewRightClick;
             }
         }
+
         private async void OnMapViewRightClick(object sender, MouseButtonEventArgs e)
         {
             var screenPoint = e.GetPosition(_mapView);
@@ -124,7 +125,6 @@ namespace HouseWithoutCars
             }
         }
 
-
         #region Properties
 
         public Map Map
@@ -137,21 +137,20 @@ namespace HouseWithoutCars
         {
             get => _graphicsOverlays;
             set { _graphicsOverlays = value; OnPropertyChanged(); }
-        }        
+        }
 
-        #endregion
+        #endregion Properties
 
         #region Commands
 
         public ICommand ClearAllCommand { get; private set; }
         public ICommand ExportCommand { get; private set; }
 
-        #endregion
+        #endregion Commands
 
         #region Event Handlers
 
         private ToolTip _currentTooltip;
-        
 
         private async void OnMapViewMouseMove(object sender, MouseEventArgs e)
         {
@@ -172,7 +171,7 @@ namespace HouseWithoutCars
             }
             catch
             {
-                // 
+                //
             }
         }
 
@@ -181,7 +180,7 @@ namespace HouseWithoutCars
             HideTooltip();
         }
 
-        #endregion
+        #endregion Event Handlers
 
         #region Annotation Management
 
@@ -265,8 +264,8 @@ namespace HouseWithoutCars
                 System.Diagnostics.Debug.WriteLine($"Error adding graphic: {ex.Message}");
                 MessageBox.Show($"Failed to add graphic: {ex.Message}");
             }
-
         }
+
         private System.Drawing.Color GetColorByCategory(string category)
         {
             return category switch
@@ -277,88 +276,6 @@ namespace HouseWithoutCars
                 "Info" => System.Drawing.Color.Green,
                 _ => System.Drawing.Color.Purple
             };
-        }
-
-        private async Task CheckForExistingAnnotation(Point screenPoint, MapPoint mapPoint)
-        {
-            try
-            {
-                var identifyResults = await _mapView.IdentifyGraphicsOverlayAsync(
-                    _annotationsOverlay, screenPoint, 10, false);
-
-                if (identifyResults.Graphics.Count > 0)
-                {
-                    var graphic = identifyResults.Graphics.First();
-                    var annotationId = graphic.Attributes["Id"].ToString();
-                    ShowAnnotationContextMenu(annotationId, screenPoint);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Failed to check for annotation: {ex.Message}");
-            }
-        }
-
-        private void ShowAnnotationContextMenu(string annotationId, Point screenPoint)
-        {
-            var contextMenu = new ContextMenu();
-
-            var editItem = new MenuItem { Header = "Edit" };
-            editItem.Click += (s, e) => EditAnnotation(annotationId);
-
-            var deleteItem = new MenuItem { Header = "Delete" };
-            deleteItem.Click += (s, e) => DeleteAnnotation(annotationId);
-
-            contextMenu.Items.Add(editItem);
-            contextMenu.Items.Add(deleteItem);
-
-            contextMenu.IsOpen = true;
-            contextMenu.PlacementTarget = _mapView;
-            contextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Relative;
-            contextMenu.HorizontalOffset = screenPoint.X;
-            contextMenu.VerticalOffset = screenPoint.Y;
-        }
-
-        private async void EditAnnotation(string annotationId)
-        {
-            var annotation = _annotations.FirstOrDefault(a => a.Id == annotationId);
-            if (annotation != null)
-            {
-                var dialog = new AnnotationDialog(annotation);
-                if (dialog.ShowDialog() == true)
-                {
-                    annotation.Title = dialog.AnnotationTitle;
-                    annotation.Description = dialog.AnnotationDescription;
-                    annotation.Category = dialog.AnnotationCategory;
-
-                    RefreshGraphics();
-                    await SaveAnnotationsAsync();
-
-                    MessageBox.Show("Annotation updated!");
-                }
-            }
-        }
-
-        private async void DeleteAnnotation(string annotationId)
-        {
-            if (MessageBox.Show("Are you sure you want to delete this annotation?", "Confirm Deletion",
-                MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-            {
-                _annotations.RemoveAll(a => a.Id == annotationId);
-                RefreshGraphics();
-                await SaveAnnotationsAsync();
-
-                MessageBox.Show("Annotation deleted!");
-            }
-        }
-
-        private void RefreshGraphics()
-        {
-            _annotationsOverlay.Graphics.Clear();
-            foreach (var annotation in _annotations)
-            {
-                AddGraphicToMap(annotation);
-            }
         }
 
         private async Task ClearAllAnnotations()
@@ -373,7 +290,7 @@ namespace HouseWithoutCars
             }
         }
 
-        #endregion
+        #endregion Annotation Management
 
         #region Tooltip Management
 
@@ -451,7 +368,7 @@ namespace HouseWithoutCars
             }
         }
 
-        #endregion
+        #endregion Tooltip Management
 
         #region Data Persistence
 
@@ -515,7 +432,7 @@ namespace HouseWithoutCars
             }
         }
 
-        #endregion
+        #endregion Data Persistence
 
         protected void OnPropertyChanged([CallerMemberName] string? propertyName = null) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -535,7 +452,9 @@ namespace HouseWithoutCars
         }
 
         public bool CanExecute(object parameter) => _canExecute?.Invoke() ?? true;
+
         public void Execute(object parameter) => _execute();
+
         public event EventHandler CanExecuteChanged
         {
             add => CommandManager.RequerySuggested += value;
@@ -555,7 +474,9 @@ namespace HouseWithoutCars
         }
 
         public bool CanExecute(object parameter) => _canExecute?.Invoke((T)parameter) ?? true;
+
         public void Execute(object parameter) => _execute((T)parameter);
+
         public event EventHandler CanExecuteChanged
         {
             add => CommandManager.RequerySuggested += value;
