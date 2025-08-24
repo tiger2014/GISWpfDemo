@@ -29,13 +29,11 @@ namespace HouseWithoutCars
             _viewModel = new MapViewModel();
             DataContext = _viewModel;
 
-            // 等待窗口加载完成后设置 MapView 引用
             Loaded += MainWindow_Loaded;
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            // 将 MapView 引用传递给 ViewModel
             _viewModel.SetMapView(MyMapView);
         }
     }
