@@ -209,10 +209,12 @@ ArcGIS Pro / ArcGIS Enterprise 手动添加 Json rule:
 > ✅ 提示：**SQLite / Mobile Geodatabase** 可以直接通过 API 执行存取操作，不需要手动建表或写脚本，SDK 会自动处理字段、类型、拓扑规则。
 ---
 
-## 🔹 核心理解
+# 2025-8-24 学习：学习 Utility Network
 
-1. **Map/Scene = 画布**
-2. **Layer = 视图层**，控制显示效果，不改数据
-3. **FeatureTable = 数据层**，真正存储要素和属性，可编辑
-4. **GraphicsOverlay = 临时层**，灵活绘制，不持久化
-5. **Utility Network = 数据 + 规则 + 拓扑**，通过 FeatureLayer 加载并由引擎管理
+学习 Sample 里面 NetWork 的要素展示，及规则检查，重构以前的代码，加入左边框菜单，显示 Utility NetWork
+
+### Utility Network 结构图
+
+![alt text](image.png)
+
+相关介绍视频[https://www.youtube.com/watch?v=AnEyXxCY4JE]
