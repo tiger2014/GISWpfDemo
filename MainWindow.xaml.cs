@@ -1,23 +1,8 @@
-﻿using Esri.ArcGISRuntime.Geometry;
-using Esri.ArcGISRuntime.Symbology;
-using Esri.ArcGISRuntime.UI;
-using Esri.ArcGISRuntime.UI.Controls;
-using System.Text;
+﻿using Esri.ArcGISRuntime.UI.Controls;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace HouseWithoutCars
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         private MapViewModel _viewModel;
@@ -25,16 +10,29 @@ namespace HouseWithoutCars
         public MainWindow()
         {
             InitializeComponent();
-
             _viewModel = new MapViewModel();
             DataContext = _viewModel;
 
             Loaded += MainWindow_Loaded;
+            Closing += MainWindow_Closing;
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            _viewModel.SetMapView(MyMapView);
+            if (MyMapView != null)
+            {
+                _viewModel.SetMapView(MyMapView, AssociationLegend);
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("Warning: MapView control not found!");
+            }
+        }
+
+        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            // 清理资源
+            _viewModel?.Cleanup();
         }
     }
 }

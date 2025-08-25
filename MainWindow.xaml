@@ -7,11 +7,11 @@
         mc:Ignorable="d"
         Title="House Without Cars" Height="600" Width="800">
     <Grid>
-        <esri:MapView x:Name="MyMapView"
+        <!--<esri:MapView x:Name="MyMapView"
                       Map="{Binding Map}"
-                      GraphicsOverlays="{Binding GraphicsOverlays}"/>
+                      GraphicsOverlays="{Binding GraphicsOverlays}"/>-->
 
-        <StackPanel Orientation="Horizontal" 
+        <!--<StackPanel Orientation="Horizontal" 
                    Margin="10" 
                    VerticalAlignment="Top" 
                    HorizontalAlignment="Left"
@@ -26,6 +26,90 @@
                     Margin="5" 
                     Padding="10,5"/>
             
-        </StackPanel>
+        </StackPanel>-->
+        <Grid.ColumnDefinitions>
+            <!-- Left sidebar menu column -->
+            <ColumnDefinition Width="250"/>
+            <!-- Map area column -->
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Left Sidebar Menu -->
+        <Border Grid.Column="0" 
+            Background="#f5f5f5" 
+            BorderBrush="#ddd" 
+            BorderThickness="0,0,1,0">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="10">
+                    <!-- Menu Title -->
+                    <TextBlock Text="Tools Menu" 
+                          FontSize="16" 
+                          FontWeight="Bold" 
+                          Margin="0,0,0,15"/>
+
+                    <!-- Main Tools -->
+                    <Expander Header="Main Tools" IsExpanded="True" Margin="0,0,0,10">
+                        <StackPanel Margin="10,5">
+                            <Button Content="Entry" 
+                               Command="{Binding EntryCommand}" 
+                               Margin="0,2" 
+                               Padding="10,5"
+                               HorizontalAlignment="Stretch"/>
+                            <Button Content="Utility Network" 
+                               Command="{Binding UtilityNetworkCommand}" 
+                               Margin="0,2" 
+                               Padding="10,5"
+                               HorizontalAlignment="Stretch"/>
+                        </StackPanel>
+                    </Expander>                    
+
+                    <!-- Layer Control -->
+                    <Expander Header="Layer Control" IsExpanded="False" Margin="0,0,0,10">
+                        <StackPanel Margin="10,5">
+                            <CheckBox Content="Base Layer" IsChecked="True" Margin="0,2"/>
+                            <CheckBox Content="Vector Layer" IsChecked="True" Margin="0,2"/>
+                            <CheckBox Content="Label Layer" IsChecked="False" Margin="0,2"/>
+                        </StackPanel>
+                    </Expander>
+                    
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+        <!-- Map Area -->
+        <Grid Grid.Column="1">
+            <esri:MapView x:Name="MyMapView"
+                      Map="{Binding Map}"/>
+
+            <!-- Keep original top button bar (optional) -->
+            <StackPanel Orientation="Horizontal" 
+                   Margin="10" 
+                   VerticalAlignment="Top" 
+                   HorizontalAlignment="Right"
+                   Background="White" 
+                   Opacity="0.9">
+                <Button Content="Clear All" 
+                     Command="{Binding ClearAllAnnotationsCommand}" 
+                     Margin="5" 
+                     Padding="10,5"/>
+                <Button Content="Export Data" 
+                     Command="{Binding ExportAnnotationsCommand}" 
+                     Margin="5" 
+                     Padding="10,5"/>
+                <Button Content="Full Screen" 
+                    Command="{Binding FullScreenCommand}" 
+                    Margin="5" 
+                    Padding="10,5"/>
+                <Button Content="Reset View" 
+                    Command="{Binding ResetViewCommand}" 
+                    Margin="5" 
+                    Padding="10,5"/>
+                <ListView x:Name="AssociationLegend"
+                    Margin="5"
+                    IsHitTestVisible="False"/>
+            </StackPanel>
+        </Grid>
+
+
     </Grid>
 </Window>
